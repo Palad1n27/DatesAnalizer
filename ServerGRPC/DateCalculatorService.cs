@@ -12,15 +12,15 @@ public class DateCalculatorService : DateCalculator.DateCalculatorBase
         var baseDate = DateTime.ParseExact(request.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); 
         try
         {
-            newDate = new DateTime(baseDate.Year, baseDate.Month, request.DayOfMonth);
+            newDate = new DateTime(baseDate.Year, baseDate.Month+1, request.DayOfMonth);
             return Task.FromResult(new DateResponse { NextDate = newDate.ToString("yyyy-MM-dd") });
         }
         catch (ArgumentOutOfRangeException)
         {
             if (request.Adjust)
             {
-                var theLastMonthDay = DateTime.DaysInMonth(baseDate.Year, baseDate.Month);
-                var resultDate = new DateTime(baseDate.Year, baseDate.Month, theLastMonthDay);
+                var theLastMonthDay = DateTime.DaysInMonth(baseDate.Year, baseDate.Month+1);
+                var resultDate = new DateTime(baseDate.Year, baseDate.Month+1, theLastMonthDay);
                 return Task.FromResult(new DateResponse { NextDate = resultDate.ToString("yyyy-MM-dd") });
             }
             else
