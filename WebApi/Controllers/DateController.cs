@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using DateGrpc;
 using Microsoft.AspNetCore.Mvc;
 using DateRequest = WebApi.Requests.DateRequest;
@@ -18,6 +19,9 @@ public class DateController : Controller
     [HttpPost]
     public async Task<ActionResult> CalculateDate([FromBody] DateRequest request)
     {
+        if(request.DayOfMonth < 1 || request.DayOfMonth > 31)
+            throw new ValidationException("Invalid day of month");
+        
         string dateStr = request.Date?.ToString("yyyy-MM-dd") ?? string.Empty;
         bool adjust = request.Adjust ?? false;
 

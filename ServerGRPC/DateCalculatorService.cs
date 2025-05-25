@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using DateGrpc;
 using Grpc.Core;
@@ -13,8 +12,6 @@ public class DateCalculatorService : DateCalculator.DateCalculatorBase
         var baseDate = DateTime.ParseExact(request.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); 
         try
         {
-            if(request.DayOfMonth < 1 || request.DayOfMonth > 31)
-                throw new ValidationException("Invalid day of month");
             newDate = new DateTime(baseDate.Year, baseDate.Month+1, request.DayOfMonth);
             return Task.FromResult(new DateResponse { NextDate = newDate.ToString("yyyy-MM-dd") });
         }

@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\datecalculator.proto" GrpcServices="Server" />
+        <Protobuf Include="Protos\date_calculator.proto" GrpcServices="Server" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
     </ItemGroup>
     

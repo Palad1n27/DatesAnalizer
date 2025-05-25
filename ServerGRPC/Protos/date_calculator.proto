@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "DateGrpc";
 
-package datecalculator;
+package date_calculator;
 
 service DateCalculator {
   rpc GetNextReportDate (DateRequest) returns (DateResponse);
