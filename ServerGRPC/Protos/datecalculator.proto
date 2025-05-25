@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "DateGrpc";
+
+package datecalculator;
+
+service DateCalculator {
+  rpc GetNextReportDate (DateRequest) returns (DateResponse);
+}
+
+message DateRequest {
+  int32 dayOfMonth = 1;
+  optional string date = 2;
+  optional bool adjust = 3;
+}
+
+message DateResponse {
+  string nextDate = 1;
+}
