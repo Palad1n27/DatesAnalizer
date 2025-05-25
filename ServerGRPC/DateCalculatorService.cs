@@ -8,32 +8,40 @@ public class DateCalculatorService : DateCalculator.DateCalculatorBase
 {
     public override Task<DateResponse> GetNextReportDate(DateRequest request, ServerCallContext context)
     {
-        DateTime newDate;
-        var baseDate = DateTime.ParseExact(request.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); 
         try
         {
-            newDate = new DateTime(baseDate.Year, baseDate.Month+1, request.DayOfMonth);
-            return Task.FromResult(new DateResponse { NextDate = newDate.ToString("yyyy-MM-dd") });
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            if (request.Adjust)
+            var baseDate = DateTime.ParseExact(request.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+            var targetMonth = baseDate.AddMonths(1);
+
+            DateTime resultDate;
+            int daysInTargetMonth = DateTime.DaysInMonth(targetMonth.Year, targetMonth.Month);
+
+            if (request.DayOfMonth <= daysInTargetMonth)
             {
-                var theLastMonthDay = DateTime.DaysInMonth(baseDate.Year, baseDate.Month+1);
-                var resultDate = new DateTime(baseDate.Year, baseDate.Month+1, theLastMonthDay);
-                return Task.FromResult(new DateResponse { NextDate = resultDate.ToString("yyyy-MM-dd") });
+                resultDate = new DateTime(targetMonth.Year, targetMonth.Month, request.DayOfMonth);
+            }
+            else if (request.Adjust)
+            {
+                resultDate = new DateTime(targetMonth.Year, targetMonth.Month, daysInTargetMonth);
             }
             else
             {
-                var resultDate = new DateTime(baseDate.Year, baseDate.Month + 2, 1);
-                return Task.FromResult(new DateResponse { NextDate = resultDate.ToString("yyyy-MM-dd") });
+                var nextMonth = baseDate.AddMonths(2);
+                resultDate = new DateTime(nextMonth.Year, nextMonth.Month, 1);
             }
+
+            return Task.FromResult(new DateResponse
+            {
+                NextDate = resultDate.ToString("yyyy-MM-dd")
+            });
         }
         catch (Exception e)
         {
             throw new RpcException(new Status(
-                StatusCode.InvalidArgument, 
-                $"Invalid date format. Expected YYYY-MM-DD. Error: {e.Message}"));
+                StatusCode.InvalidArgument,
+                $"Invalid request. Error: {e.Message}"
+            ));
         }
     }
 }

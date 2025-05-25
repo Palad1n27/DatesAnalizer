@@ -22,7 +22,7 @@ public class DateController : Controller
         if(request.DayOfMonth < 1 || request.DayOfMonth > 31)
             throw new ValidationException("Invalid day of month");
         
-        string dateStr = request.Date?.ToString("yyyy-MM-dd") ?? string.Empty;
+        string dateStr = request.Date?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd");
         bool adjust = request.Adjust ?? false;
 
         var grpcRequest = new DateGrpc.DateRequest
